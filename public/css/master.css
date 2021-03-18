@@ -36,6 +36,7 @@ main {
   max-width: 1200px;
   height: 86%;
   overflow-y: hidden;
+  overflow-x: hidden;
   margin: 0.5rem 0.5rem 0 0.5rem;
 }
 

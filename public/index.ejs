@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="/css/master.css">
+  <link rel="shortcut icon" href="/icons/chat.svg" type="image/svg+xml">
+
+  <script defer src="http://localhost:3000/socket.io/socket.io.js"></script>
+  <script defer src="script.js"></script>
+  <title>Chat app</title>
+  <style>
+    body {
+      display: grid;
+      grid-template-columns: 5fr 10fr;
+      height: 100vh;
+    }
+
+    section {
+      display: flex;
+      flex-direction: column;
+      align-self: stretch;
+      background: #274f9e;
+      position: relative;
+    }
+
+    .room-container {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+    }
+
+    .room-container ul {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      list-style: none;
+      
+    }
+    .room-container ul li{
+      margin: 0.4rem;
+      background: white;
+      border-radius: 0.25rem;
+      padding: 0.5rem;
+    }
+
+    .room-container ul li span{
+      margin: 0.2rem;
+    }
+
+    .btn-new-room{
+      color:white;
+      transform: scale(0.8);
+      transition: 0.2s;
+      background:transparent;
+      width:10%;
+    }
+    .btn-new-room:hover{
+      transform: scale(1)
+    }
+
+    form{
+      position: relative;
+      margin-bottom: 0.8rem;
+    }
+  </style>
+</head>
+
+<body>
+  <section>
+    <div class="room-container">
+      <ul id="rooms-list">
+        <% Object.keys(rooms).forEach(room => { %>
+          <li>
+            <span><%= room %></span>
+            <a href="/<%= room %>">Join</a>
+          </li>
+        <% }) %>
+      </ul>
+    </div>
+
+    <form action="/room" method="POST">
+      <input name="room" type="text" required placeholder="name of the room" autocomplete="off">
+      <button type="submit" class="btn-new-room">New Room</button>
+    </form>
+  </section>
+
+</body>
+
+</html>

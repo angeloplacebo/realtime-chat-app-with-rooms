@@ -1,64 +1,79 @@
-const socket = io('http://localhost:3000')
-const messageContainer = document.getElementById('message-container')
-const messageForm = document.getElementById('send-container')
-const messageInput = document.getElementById('message-input')
+const socket = io("http://localhost:3000");
+const messageContainer = document.getElementById("message-container");
+const roomsList = document.getElementById("rooms-list");
+const messageForm = document.getElementById("send-container");
+const messageInput = document.getElementById("message-input");
 
+if (messageForm != null) {
+  const name = prompt("What is your name?");
+  socket.emit("new-user",roomName, name);
 
-const name = prompt('What is your name?')
-// appendNotes('You Joined')
-socket.emit('new-user', name)
+  messageForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const message = messageInput.value;
+    if (message) {
+      socket.emit("send-chat-message",roomName, message);
+      appendSendedMessage(message);
+      messageInput.value = "";
+    }
+  });
+}
 
-socket.on('previous-messages', messages =>{
-  for(message of messages){
-    appendMessage(message)
+socket.on('room-created', room => {
+  const roomElement = document.createElement('li')
+
+  const roomName = document.createElement('span')
+  roomName.innerText= room
+  const roomLink = document.createElement('a')
+  roomLink.href = `/${room}`
+  roomLink.innerText = 'Join'
+  roomElement.append(roomName)
+  roomElement.append(roomLink)
+
+  console.log(roomElement)
+  roomsList.append(roomElement)
+})
+
+socket.on("previous-messages", (messages) => {
+  for (message of messages) {
+    appendMessage(message);
   }
-  appendNotes('You Joined')
-})
+  appendNotes("You Joined");
+});
 
-socket.on('chat-message',data =>{
-  appendMessage(data)
-})
+socket.on("chat-message", (data) => {
+  appendMessage(data);
+});
 
-socket.on('user-connected',name =>{
-  appendNotes(`${name} connected`)
-})
+socket.on("user-connected", (name) => {
+  appendNotes(`${name} connected`);
+});
 
-socket.on('user-disconnected',name =>{
-  appendNotes(`${name} disconnected`)
-})
-
-messageForm.addEventListener('submit', e =>{
-  e.preventDefault()
-  const message = messageInput.value
-  if (message) {
-    socket.emit('send-chat-message', message)
-    appendSendedMessage(message)
-    messageInput.value =''
-  }
-})
-
+socket.on("user-disconnected", (name) => {
+  appendNotes(`${name} disconnected`);
+});
 
 function appendNotes(note) {
-  const messageElement = document.createElement('div')
-  messageElement.classList.add('received','note')
-  messageElement.innerText = note
-  messageContainer.append(messageElement)
-  messageContainer.scrollTop = messageContainer.scrollHeight
+  const messageElement = document.createElement("div");
+  messageElement.classList.add("received", "note");
+  messageElement.innerText = note;
+  messageContainer.append(messageElement);
+  messageContainer.scrollTop = messageContainer.scrollHeight;
 }
 
 function appendMessage(data) {
-  let { author, message } = data
-  const messageElement = document.createElement('div')
-  messageElement.classList.add('received')
-  messageElement.innerHTML = `<strong>${author}:</strong> ${message}`
-  messageContainer.append(messageElement)
-  messageContainer.scrollTop = messageContainer.scrollHeight
+  let { author, message } = data;
+  const messageElement = document.createElement("div");
+  messageElement.classList.add("received");
+  messageElement.innerHTML = `<strong>${author}:</strong> ${message}`;
+  messageContainer.append(messageElement);
+  messageContainer.scrollTop = messageContainer.scrollHeight;
 }
 
 function appendSendedMessage(message) {
-  const messageElement = document.createElement('div')
-  messageElement.classList.add('sended')
-  messageElement.innerText = message
-  messageContainer.append(messageElement)
-  messageContainer.scrollTop = messageContainer.scrollHeight
+  const messageElement = document.createElement("div");
+  messageElement.classList.add("sended");
+  messageElement.innerText = message;
+  messageContainer.append(messageElement);
+  messageContainer.scrollTop = messageContainer.scrollHeight;
 }

@@ -9,13 +9,12 @@
   <link rel="stylesheet" href="/css/master.css">
   <link rel="shortcut icon" href="/icons/chat.svg" type="image/svg+xml">
 
-  <script>
-    const roomName = "<%= roomName %>"
-    console.log(roomName)
-  </script>
 
   <script defer src="http://localhost:3000/socket.io/socket.io.js"></script>
-  <script defer src="script.js"></script>
+  <script defer src="individualRoom.js"></script>
+  <script defer>
+    const roomName = "<%= roomName %>"
+  </script>
   <title>Chat app</title>
 </head>
 
